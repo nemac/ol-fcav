@@ -20,12 +20,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nemac/ol-fcav.git"
+    "url": "https://github.com/violincounter/ol-fcav.git"
   },
   "author": "NEMAC",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nemac/ol-fcav/issues"
+    "url": "https://github.com/violincounter/ol-fcav/issues"
   },
   "homepage": "http://forwarn.forestthreats.org"
 }
