@@ -1,3 +1,4 @@
 [submodule "libs/seldon"]
 	path = libs/seldon
-	url = https://github.com/nemac/seldon.git
+	url = https://github.com/violincounter/seldon.git
+	branch = fcav
