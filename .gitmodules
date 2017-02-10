@@ -1,4 +1,4 @@
 [submodule "libs/seldon"]
-	path = html/libs/seldon
+	path = libs/seldon
 	url = git@github.com:nemac/seldon.git
   branch = ol-fcav-issue-83
