@@ -5,7 +5,6 @@ module.exports = function ($, app) {
         EventEmitter.call(this);
         if (!settings) { return; }
         $.extend(true, this, settings); // copy all properties from `settings` into `this`
-        this.transparency = 0;
         if (this.index == undefined) {
             this.index = 0;
         }
@@ -21,8 +20,7 @@ module.exports = function ($, app) {
                 isBaseLayer      : false,
                 transitionEffect : 'resize',
                 buffer           : 0,
-                singleTile       : true,
-                ratio            : 1
+                tileSize         : new OpenLayers.Size(2048,2048)
             };
 
             if (this.type === "WMTS") {
@@ -82,7 +80,6 @@ module.exports = function ($, app) {
                     options.maxResolution = parseFloat(this.maxResolution);
                 }
                 var layer = this.layers + (("mask" in this) ? app.maskModifiers.join("") : "");
-
                 this.openLayersLayer = new OpenLayers.Layer.WMS(
                     this.name,
                     this.url,
@@ -90,7 +87,7 @@ module.exports = function ($, app) {
                         projection  : new OpenLayers.Projection(seldon.projection),
                         units       : "m",
                         layers      : layer,
-                        transparent : true
+                        transparent : true,
                     },
                     options
                 );
@@ -143,6 +140,8 @@ module.exports = function ($, app) {
                 this.visible = "true";
                 app.map.addLayer(this.createOpenLayersLayer())
             }
+
+            this.setTransparency()
 
             vectorServices = [ 'vlayers', 'fire', 'ads' ]
             boundaryServices = [ 'boundaries' ]
@@ -260,11 +259,10 @@ module.exports = function ($, app) {
         };
 
         this.setTransparency = function (transparency) {
+            this.transparency = parseFloat(transparency) || this.transparency || 0
             if (this.openLayersLayer) {
-                this.openLayersLayer.setOpacity(1 - parseFloat(transparency)/100.0);
+                this.openLayersLayer.setOpacity(1.0 - parseFloat(this.transparency)/100.0);
             }
-            this.transparency = transparency;
-
             //Comment this out for now
             //Essentially emits the following two commands:
             try {
@@ -275,8 +273,6 @@ module.exports = function ($, app) {
                 var errTxt = err.Message;
             }
 
-            // Handle transparency for mask
-            // Still need to make this parent-layer specific
             if (app.map !== undefined) {
                 var currentLayer, openLayersLayer, lid;
                 var i;
@@ -287,7 +283,7 @@ module.exports = function ($, app) {
 
                     if (stringContainsChar(currentLayer.name, 'Mask')) {
                         if (openLayersLayer && (lid.substring(0, lid.indexOf("MaskFor")) === this.lid)) {
-                            openLayersLayer.setOpacity(1 - parseFloat(transparency)/100.0);
+                            openLayersLayer.setOpacity(1 - parseFloat(this.transparency)/100.0);
                             currentLayer.seldonLayer.transparency = transparency;
                         }
                     }

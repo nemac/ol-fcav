@@ -54,7 +54,6 @@ function initOpenLayers (baseLayerInfo, baseLayer, theme, themeOptions, initialE
     app.map = new OpenLayers.Map('map', {
         units:             'm',
         tileManager:       app.tileManager,
-        center: [-10986902.689297,4856468.480035],
         controls: [
             new OpenLayers.Control.Navigation(),
             new OpenLayers.Control.Attribution(),
@@ -81,10 +80,9 @@ function initOpenLayers (baseLayerInfo, baseLayer, theme, themeOptions, initialE
     app.map.setLayerIndex(layer, 0);
     app.setTheme(theme, themeOptions);
 
-    var defaultZoom = 5
-    app.map.setCenter(app.map.getCenter(), defaultZoom)
+    app.zoomToExtent(initialExtent);
+    app.saveCurrentExtent();
 
-    app.saveCurrentExtent()
     app.map.events.register("mousemove", app.map, function (e) {
         var pixel = app.map.events.getMousePosition(e);
         var lonlat = app.map.getLonLatFromPixel(pixel);
