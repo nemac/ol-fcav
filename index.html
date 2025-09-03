@@ -38,11 +38,82 @@
     <link rel="stylesheet" type="text/css" href="libs/seldon/seldon.css" />
     <link rel="stylesheet" type="text/css" href="fcav.css" />
 
+    <style type="text/css">
+      /* Notice popup specific styles */
+      #noticeDialog {
+        text-align: left;
+        font-family: Arial, sans-serif;
+        line-height: 1.4;
+      }
+      
+      #noticeDialog .notice-header {
+        background: #f44336;
+        color: white;
+        padding: 8px 12px;
+        margin: -8px -12px 12px -12px;
+        font-weight: bold;
+        font-size: 14px;
+        text-align: center;
+      }
+      
+      #noticeDialog .notice-content {
+        padding: 0 8px;
+        font-size: 13px;
+        color: #333;
+      }
+      
+      #noticeDialog .notice-link {
+        color: #0066cc;
+        text-decoration: underline;
+      }
+      
+      #noticeDialog .notice-link:hover {
+        color: #004499;
+      }
+      
+      /* Ensure dialog appears above all other content */
+      .ui-dialog.notice-dialog {
+        z-index: 10000 !important;
+      }
+      
+      .ui-widget-overlay.notice-overlay {
+        z-index: 9999 !important;
+        background: #000;
+        opacity: 0.5;
+      }
+    </style>
+
     <script type="text/javascript">
       $('document').ready(function() {
+          // Show notice popup first
+          showNoticePopup();
+          
           seldon.init("https://fswms-dev.nemac.org/view/config/ews_config.xml", "EPSG:3857", legend_lookup); //for dev
           //seldon.init("https://wms.forwarn.forestthreats.org/view/config/ews_config.xml","EPSG:3857", legend_lookup);
       });
+      
+      function showNoticePopup() {
+          $("#noticeDialog").dialog({
+              modal: true,
+              width: 500,
+              height: 'auto',
+              resizable: false,
+              draggable: true,
+              dialogClass: 'notice-dialog',
+              closeOnEscape: false,
+              open: function(event, ui) {
+                  // Remove the close button from title bar
+                  $(this).parent().find('.ui-dialog-titlebar-close').hide();
+                  // Add custom overlay class
+                  $('.ui-widget-overlay').addClass('notice-overlay');
+              },
+              buttons: {
+                  "I Understand": function() {
+                      $(this).dialog("close");
+                  }
+              }
+          });
+      }
     </script>
 
     <script>
@@ -82,7 +153,7 @@
         </div>
         <div id="btnPrint" class="btn-large header-bar">
           <img id="printPic" src="icons/print.png" class="icon" title="Print"/>
-        </div>		
+        </div>
       </div>
 
       <div id="btn-small-group" class="header-bar">
@@ -158,6 +229,19 @@
         <div><textarea class="shareMapUrl" readonly="true"></textarea></div>
         <h3>Legend (click to clear layer)</h3>
         <div id="legend"></div>
+      </div>
+    </div>
+
+    <!-- Notice Dialog -->
+    <div id="noticeDialog" title="Important Notice">
+      <div class="notice-header">
+        NOTICE
+      </div>
+      <div class="notice-content">
+        This viewer is planned to be sunset on <strong>September 30th, 2025</strong>. Please see 
+        <a href="https://hiform.org" target="_blank" class="notice-link">https://hiform.org</a> 
+        for up to date information. We plan on serving a data archive of all previously published 
+        products soon and more information will be available here in the future. Thank you.
       </div>
     </div>
 
