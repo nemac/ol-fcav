@@ -95,12 +95,12 @@
       function showNoticePopup() {
           $("#noticeDialog").dialog({
               modal: true,
-              width: 500,
+              width: 600,
               height: 'auto',
               resizable: false,
               draggable: true,
               dialogClass: 'notice-dialog',
-              closeOnEscape: false,
+              closeOnEscape: true,
               open: function(event, ui) {
                   // Remove the close button from title bar
                   $(this).parent().find('.ui-dialog-titlebar-close').hide();
